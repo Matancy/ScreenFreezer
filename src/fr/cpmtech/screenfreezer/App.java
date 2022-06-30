@@ -10,6 +10,10 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.awt.*;
@@ -22,13 +26,17 @@ public class App extends Stage {
     private VBox root = new VBox();
     private HBox zoneText = new HBox();
     private HBox zoneBtn = new HBox();
+    private HBox zoneActualisation = new HBox();
 
     public App() {
         Scene scene = new Scene(content());
-        this.setMinHeight(300);
+        root.setStyle("-fx-background-color: #34495e;");
         this.setMinWidth(300);
+        this.setMinHeight(200);
         this.setScene(scene);
         this.setAlwaysOnTop(true);
+        this.setResizable(false);
+        this.setTitle("ScreenFreezer");
     }
 
     Parent content() {
@@ -41,8 +49,23 @@ public class App extends Stage {
             zoneBtn.setSpacing(10);
             zoneBtn.setAlignment(Pos.CENTER);
 
-            Label title = new Label("Ecran disponibles :");
+            // Add title
+            Label title = new Label("Ecrans disponibles");
+            zoneText.setAlignment(Pos.CENTER);
+            title.setPadding(new Insets(30, 0, 30, 0));
+            title.setFont(Font.font("Nunito", FontWeight.BOLD, FontPosture.REGULAR, 20));
+            title.setTextFill(Paint.valueOf("#f5f5f5"));
             zoneText.getChildren().add(title);
+
+            // Add actualisation button
+            Button actualisation = new Button("Actualiser");
+            actualisation.setOnAction(event -> {
+                new App().show();
+                this.close();
+            });
+            zoneActualisation.getChildren().add(actualisation);
+            zoneActualisation.setAlignment(Pos.CENTER);
+            zoneActualisation.setPadding(new Insets(30, 0, 30, 0));
 
             // Robot
             Robot r = new Robot();
@@ -67,7 +90,7 @@ public class App extends Stage {
                     index = listX.indexOf((int) tmp.getMinX());
 
                     Button btn = new Button(index + 1 + "");
-                    btn.setPadding(new Insets(10, 10, 10, 10));
+                    btn.setPadding(new Insets(7, 10, 7, 10));
 
                     btn.setOnAction(e -> {
                         Rectangle rect = new Rectangle((int) tmp.getMinX(), 0, tmp.width, tmp.height);
@@ -82,7 +105,8 @@ public class App extends Stage {
                 }
             }
 
-            root.getChildren().addAll(zoneText, zoneBtn);
+            root.getChildren().addAll(zoneText, zoneBtn, zoneActualisation);
+            root.setAlignment(Pos.CENTER);
         }
         catch (AWTException ex) {
             System.out.println(ex);
