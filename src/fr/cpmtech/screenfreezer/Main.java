@@ -1,3 +1,5 @@
+package fr.cpmtech.screenfreezer;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 

@@ -1,3 +1,5 @@
+package fr.cpmtech.screenfreezer;
+
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
