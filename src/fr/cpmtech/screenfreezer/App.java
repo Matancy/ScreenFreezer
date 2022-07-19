@@ -32,12 +32,12 @@ public class App extends Stage {
     public App() {
         Scene scene = new Scene(content());
         root.setStyle("-fx-background-color: #34495e;");
-        this.setMinWidth(300);
+        this.setMinWidth(350);
         this.setMinHeight(200);
         this.setScene(scene);
         this.setAlwaysOnTop(true);
         this.setResizable(false);
-        this.setTitle("ScreenFreezer");
+        this.setTitle("CPM Tech pour 7030.fr®");
     }
 
     Parent content() {
