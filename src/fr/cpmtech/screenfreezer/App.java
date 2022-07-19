@@ -27,7 +27,6 @@ public class App extends Stage {
     private HBox zoneText = new HBox();
     private HBox zoneBtn = new HBox();
     private HBox zoneActualisation = new HBox();
-    private VBox zoneDebug = new VBox();
 
     public App() {
         Scene scene = new Scene(content());
@@ -120,16 +119,11 @@ public class App extends Stage {
                         zoneBtn.getChildren().add(btn);
                         System.out.println(baseX);
                         baseX += tmp.width;
-
-                        // Debug section
-                        Label debugText = new Label("X : " + tmp.getMinX() + " Y : " + tmp.getMinY() + " W : " + tmp.width + " H : " + tmp.height);
-                        debugText.setTextFill(Paint.valueOf("#f5f5f5"));
-                        zoneDebug.getChildren().add(debugText);
                     }
                 }
             }
 
-            root.getChildren().addAll(zoneText, zoneBtn, zoneActualisation, zoneDebug);
+            root.getChildren().addAll(zoneText, zoneBtn, zoneActualisation);
             root.setAlignment(Pos.CENTER);
         }
         catch (AWTException ex) {
