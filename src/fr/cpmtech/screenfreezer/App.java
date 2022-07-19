@@ -27,6 +27,7 @@ public class App extends Stage {
     private HBox zoneText = new HBox();
     private HBox zoneBtn = new HBox();
     private HBox zoneActualisation = new HBox();
+    private VBox zoneDebug = new VBox();
 
     public App() {
         Scene scene = new Scene(content());
@@ -42,8 +43,8 @@ public class App extends Stage {
     Parent content() {
         try {
             // Define some vars for screen
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            GraphicsDevice[] screens = ge.getScreenDevices();
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); // Contains the graphical environment of the local machine
+            GraphicsDevice[] screens = ge.getScreenDevices(); // List of all the screens
 
             // To contain list of buttons
             zoneBtn.setSpacing(10);
@@ -71,41 +72,64 @@ public class App extends Stage {
             Robot r = new Robot();
 
             // List of min x for each screen
-            ArrayList<Integer> listX = new ArrayList<Integer>();
+//            ArrayList<Integer, Integer> listX = new ArrayList<Integer>();
+            // Create list with two integers for each screen
+            ArrayList<Integer[]> listX = new ArrayList<Integer[]>();
+            ArrayList<Integer> listXbis = new ArrayList<Integer>();
 
             // Get each min x
             for (GraphicsDevice screen : screens) {
                 Rectangle tmp = screen.getDefaultConfiguration().getBounds();
-                listX.add((int) tmp.getMinX());
+                listX.add(new Integer[]{(int) tmp.getMinX(), tmp.width});
+                listXbis.add((int) tmp.getMinX());
             }
 
             // Sort list of min x
-            Collections.sort(listX);
+            Collections.sort(listX, (a, b) -> a[0].compareTo(b[0]));
+            Collections.sort(listXbis);
+
+            // Var to contain base X
+            int baseX = 0;
+            if (listX.get(0)[0] < 0) {
+                baseX = 0 - listX.get(0)[1];
+            } else {
+                baseX = listX.get(0)[0];
+            }
 
             // For each screen, create a button (screen sorted by order)
-            for (int el : listX) {
+            for (Integer[] el : listX) {
                 for (GraphicsDevice screen : screens) {
                     int index;
                     Rectangle tmp = screen.getDefaultConfiguration().getBounds();
-                    index = listX.indexOf((int) tmp.getMinX());
+                    index = listXbis.indexOf((int) tmp.getMinX());
 
                     Button btn = new Button(index + 1 + "");
                     btn.setPadding(new Insets(7, 10, 7, 10));
 
+                    int finalBaseX = baseX;
                     btn.setOnAction(e -> {
                         Rectangle rect = new Rectangle((int) tmp.getMinX(), 0, tmp.width, tmp.height);
                         BufferedImage image = r.createScreenCapture(rect);
                         Image img = SwingFXUtils.toFXImage(image, null);
 
-                        new Display(img, (int) tmp.getMinX(), 0).show();
+                        new Display(img, (int) finalBaseX, 0).show();
                     });
-                    if (el == tmp.getMinX()) {
+
+
+                    if (el[0] == tmp.getMinX()) {
                         zoneBtn.getChildren().add(btn);
+                        System.out.println(baseX);
+                        baseX += tmp.width;
+
+                        // Debug section
+                        Label debugText = new Label("X : " + tmp.getMinX() + " Y : " + tmp.getMinY() + " W : " + tmp.width + " H : " + tmp.height);
+                        debugText.setTextFill(Paint.valueOf("#f5f5f5"));
+                        zoneDebug.getChildren().add(debugText);
                     }
                 }
             }
 
-            root.getChildren().addAll(zoneText, zoneBtn, zoneActualisation);
+            root.getChildren().addAll(zoneText, zoneBtn, zoneActualisation, zoneDebug);
             root.setAlignment(Pos.CENTER);
         }
         catch (AWTException ex) {
