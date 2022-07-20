@@ -45,11 +45,11 @@ public class App extends Stage {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment(); // Contains the graphical environment of the local machine
             GraphicsDevice[] screens = ge.getScreenDevices(); // List of all the screens
 
-            // To contain list of buttons
+            // Update style of zoneBtn
             zoneBtn.setSpacing(10);
             zoneBtn.setAlignment(Pos.CENTER);
 
-            // Add title
+            // Add title at the top of the window
             Label title = new Label("Ecrans disponibles");
             zoneText.setAlignment(Pos.CENTER);
             title.setPadding(new Insets(30, 0, 30, 0));
@@ -57,7 +57,7 @@ public class App extends Stage {
             title.setTextFill(Paint.valueOf("#f5f5f5"));
             zoneText.getChildren().add(title);
 
-            // Add actualisation button
+            // Add actualisation button at the bottom of the window
             Button actualisation = new Button("Actualiser");
             actualisation.setOnAction(event -> {
                 new App().show();
@@ -67,23 +67,23 @@ public class App extends Stage {
             zoneActualisation.setAlignment(Pos.CENTER);
             zoneActualisation.setPadding(new Insets(30, 0, 30, 0));
 
-            // Robot
+            // Create robot to get all the screens
             Robot r = new Robot();
 
-            // List of min x for each screen
-//            ArrayList<Integer, Integer> listX = new ArrayList<Integer>();
-            // Create list with two integers for each screen
+            // Create list with the min X and the width of a screen
             ArrayList<Integer[]> listX = new ArrayList<Integer[]>();
+
+            // Create list with the min X
             ArrayList<Integer> listXbis = new ArrayList<Integer>();
 
-            // Get each min x
+            // Get each min x and screen width
             for (GraphicsDevice screen : screens) {
                 Rectangle tmp = screen.getDefaultConfiguration().getBounds();
                 listX.add(new Integer[]{(int) tmp.getMinX(), tmp.width});
                 listXbis.add((int) tmp.getMinX());
             }
 
-            // Sort list of min x
+            // Sort list of min x and screen width
             Collections.sort(listX, (a, b) -> a[0].compareTo(b[0]));
             Collections.sort(listXbis);
 
@@ -114,15 +114,14 @@ public class App extends Stage {
                         new Display(img, (int) finalBaseX, 0).show();
                     });
 
-
                     if (el[0] == tmp.getMinX()) {
                         zoneBtn.getChildren().add(btn);
-                        System.out.println(baseX);
                         baseX += tmp.width;
                     }
                 }
             }
 
+            // Add all the elements to the root
             root.getChildren().addAll(zoneText, zoneBtn, zoneActualisation);
             root.setAlignment(Pos.CENTER);
         }
